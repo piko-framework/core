@@ -18,4 +18,7 @@
       <html outputDirectory="coverage" lowUpperBound="20" highLowerBound="50"/>
     </report>
   </coverage>
+  <php>
+    <ini name="xdebug.mode" value="coverage"/>
+  </php>
 </phpunit>
