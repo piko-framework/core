@@ -9,11 +9,10 @@
 	<arg name="colors"/>
 	<arg name="tab-width" value="4"/>
 
-	<rule ref="PSR2">
+	<rule ref="PSR12">
 		<!-- We want sometimes add new lines before or after control structure for better readability -->
 		<exclude name="Squiz.WhiteSpace.ControlStructureSpacing.SpacingAfterOpen" />
 		<exclude name="Squiz.WhiteSpace.ControlStructureSpacing.SpacingBeforeClose" />
-		<exclude-pattern>tests?/*.php$</exclude-pattern>
 	</rule>
 
 	<!--Space after cast ((int) $var). -->
@@ -27,7 +26,6 @@
 		<exclude name="PEAR.Commenting.FileComment.MissingCategoryTag"/>
 		<exclude name="PEAR.Commenting.FileComment.MissingPackageTag"/>
 		<exclude name="PEAR.Commenting.FileComment.MissingAuthorTag"/>
-		<exclude-pattern>tests?/*.php$</exclude-pattern>
 	</rule>
 	
 	<!-- Class comment rule. -->
@@ -37,12 +35,10 @@
 		<exclude name="PEAR.Commenting.ClassComment.MissingPackageTag"/>
 		<exclude name="PEAR.Commenting.ClassComment.MissingLinkTag"/>
 		<exclude name="PEAR.Commenting.ClassComment.MissingLicenseTag"/>
-		<exclude-pattern>tests?/*.php$</exclude-pattern>
 	</rule>
 
 	<!-- Class members comment rule. -->
 	<rule ref="Squiz.Commenting.VariableComment">
-		<exclude-pattern>tests?/*.php$</exclude-pattern>
 	</rule>
 	
 	<rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing">
