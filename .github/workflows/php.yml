@@ -1,4 +1,4 @@
-name: Tests
+name: build
 
 on:
   push:
@@ -33,10 +33,10 @@ jobs:
       env:
         XDEBUG_MODE: coverage
       run: vendor/bin/phpunit --coverage-clover clover.xml
-      
+
     - name: Upload coverage results to Coveralls
       env:
         COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         composer require php-coveralls/php-coveralls -n -W
-        vendor/bin/php-coveralls --coverage_clover=clover.xml -v --root_dir `pwd`
+        vendor/bin/php-coveralls --coverage_clover=clover.xml -v --json_path=coveralls-upload.json
