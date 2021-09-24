@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of Piko - Web micro framework
  *
@@ -6,6 +7,7 @@
  * @license LGPL-3.0; see LICENSE.txt
  * @link https://github.com/piko-framework/piko
  */
+
 declare(strict_types=1);
 
 namespace piko;
@@ -22,14 +24,14 @@ class Piko
     /**
      * The registry container.
      *
-     * @var array
+     * @var mixed[]
      */
     protected static $registry = [];
 
     /**
      * The aliases container.
      *
-     * @var array
+     * @var string[]
      */
     protected static $aliases = [];
 
@@ -108,11 +110,11 @@ class Piko
     /**
      * Singleton factory method.
      *
-     * @param string|array $type The object type.
+     * @param string|array<string, array> $type The object type.
      * If it is a string, it should be the fully qualified name of the class.
      * If an array given, it should contain the key 'class' with the value corresponding
      * to the fully qualified name of the class
-     * @param array $properties A name-value pair array corresponding to the object public properties.
+     * @param array<string, array> $properties A name-value pair array corresponding to the object public properties.
      * @return object
      */
     public static function createObject($type, array $properties = [])
@@ -123,10 +125,13 @@ class Piko
             unset($properties['class']);
         }
 
+        /** @phpstan-ignore-next-line */
         if (!isset(static::$registry[$type])) {
+            /** @phpstan-ignore-next-line */
             static::$registry[$type] = empty($properties) ? new $type() : new $type($properties);
         }
 
+        /** @phpstan-ignore-next-line */
         return static::$registry[$type];
     }
 
@@ -134,7 +139,7 @@ class Piko
      * Configure public attributes of an object.
      *
      * @param object $object The object instance.
-     * @param array $properties A name-value pair array corresponding to the object public properties.
+     * @param array<string, array> $properties A name-value pair array corresponding to the object public properties.
      * @return void
      */
     public static function configureObject($object, array $properties = []): void

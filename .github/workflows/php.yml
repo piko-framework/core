@@ -28,6 +28,12 @@ jobs:
 
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
+      
+    - name: Check coding standards
+      run: vendor/bin/phpcs --standard=./coding-standard src
+      
+    - name: Code Analysis
+      run: vendor/bin/phpstan
 
     - name: Run test suite
       env:

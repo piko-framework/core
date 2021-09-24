@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of Piko - Web micro framework
  *
@@ -6,6 +7,7 @@
  * @license LGPL-3.0; see LICENSE.txt
  * @link https://github.com/piko-framework/piko
  */
+
 declare(strict_types=1);
 
 namespace piko;
@@ -33,21 +35,21 @@ abstract class Component
     /**
      * Event handlers container.
      *
-     * @var callable[]
+     * @var array<callable[]>
      */
     public $events = [];
 
     /**
      * Static event handlers container.
      *
-     * @var callable[]
+     * @var array<callable[]>
      */
     public static $events2 = [];
 
     /**
      * Constructor
      *
-     * @param array $config A configuration array to set public properties of the class.
+     * @param array<string, array> $config A configuration array to set public properties of the class.
      * @return void
      */
     public function __construct(array $config = [])
@@ -69,7 +71,7 @@ abstract class Component
      * Magic method to call a behavior.
      *
      * @param string $name The name of the behavior.
-     * @param array $args The behavior arguments.
+     * @param array<int, mixed> $args The behavior arguments.
      * @throws RuntimeException
      * @return mixed
      */
@@ -86,7 +88,7 @@ abstract class Component
      * Event registration.
      *
      * @param string $eventName The event name to register.
-     * @param mixed $callback The event handler to register. Must be  one of the following:
+     * @param callable $callback The event handler to register. Must be  one of the following:
      *                        - A Closure (function(){ ... })
      *                        - An object method ([$object, 'methodName'])
      *                        - A static class method ('MyClass::myMethod')
@@ -112,7 +114,7 @@ abstract class Component
      * Static event registration.
      *
      * @param string $eventName The event name to register.
-     * @param mixed $callback The event handler to register. Must be  one of the following:
+     * @param callable $callback The event handler to register. Must be  one of the following:
      *                        - A Closure (function(){ ... })
      *                        - An object method ([$object, 'methodName'])
      *                        - A static class method ('MyClass::myMethod')
@@ -140,7 +142,7 @@ abstract class Component
      * Event handlers corresponding to this event will be called in the order they are registered.
      *
      * @param string $eventName The event name to trigger.
-     * @param array $args The event handlers arguments.
+     * @param array<int, mixed> $args The event handlers arguments.
      * @return mixed[]
      */
     public function trigger(string $eventName, array $args = [])
