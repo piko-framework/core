@@ -38,8 +38,8 @@ use piko\Piko;
 Piko::setAlias('@web', '/');
 Piko::setAlias('@webroot', '/var/www');
 
-if (file_exists(Piko::getAlias('@webroot/images/home.jpg')) {
-  echo 'Image uri : ' . Piko::getAlias('@web/images/home.jpg')
+if (file_exists(Piko::getAlias('@webroot/images/home.jpg'))) {
+  echo 'Image uri : ' . Piko::getAlias('@web/images/home.jpg');
 }
 
 ```
