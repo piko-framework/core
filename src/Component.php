@@ -15,10 +15,10 @@ namespace piko;
 use RuntimeException;
 
 /**
- * Component class implements events and behaviors features.
- * Also component public properties can be initialized with an array of configuration during instantiation.
+ * Component class offers events and behaviors features to inherited classes.
+ * Public properties can be initialized with an array of configuration during instantiation.
  *
- * Events offer the possibility to inject custom code when they are triggered.
+ * Events offer the possibility to execute external code when they are triggered.
  * Behaviors offer the possibility to add custom methods without extending the class.
  *
  * @author Sylvain PHILIP <contact@sphilip.com>
@@ -28,23 +28,23 @@ abstract class Component
     /**
      * Behaviors container.
      *
-     * @var callable[]
+     * @var array<callable>
      */
     public $behaviors = [];
 
     /**
-     * Event handlers container.
+     * Event listeners container.
      *
      * @var array<callable[]>
      */
-    public $events = [];
+    public $on = [];
 
     /**
-     * Static event handlers container.
+     * Static event listeners container.
      *
      * @var array<callable[]>
      */
-    public static $events2 = [];
+    public static $when = [];
 
     /**
      * Constructor
@@ -60,6 +60,7 @@ abstract class Component
 
     /**
      * Method called at the end of the constructor.
+     * This could be overriden in inherited classes.
      *
      * @return void
      */
@@ -87,76 +88,78 @@ abstract class Component
     /**
      * Event registration.
      *
-     * @param string $eventName The event name to register.
-     * @param callable $callback The event handler to register. Must be  one of the following:
+     * @param string $eventName The event name to listen.
+     * @param callable $callback The event listener to register. Must be  one of the following:
      *                        - A Closure (function(){ ... })
      *                        - An object method ([$object, 'methodName'])
      *                        - A static class method ('MyClass::myMethod')
      *                        - A global function ('myFunction')
+     *                        - An object implementing __invoke()
      * @param string $priority The order priority in the events stack ('after' or 'before'). Default to 'after'.
      *
      * @return void
      */
     public function on(string $eventName, callable $callback, string $priority = 'after'): void
     {
-        if (! isset($this->events[$eventName])) {
-            $this->events[$eventName] = [];
+        if (! isset($this->on[$eventName])) {
+            $this->on[$eventName] = [];
         }
 
         if ($priority == 'before') {
-            array_unshift($this->events[$eventName], $callback);
+            array_unshift($this->on[$eventName], $callback);
         } else {
-            $this->events[$eventName][] = $callback;
+            $this->on[$eventName][] = $callback;
         }
     }
 
     /**
      * Static event registration.
      *
-     * @param string $eventName The event name to register.
-     * @param callable $callback The event handler to register. Must be  one of the following:
+     * @param string $eventName The event name to listen.
+     * @param callable $callback The event listener to register. Must be  one of the following:
      *                        - A Closure (function(){ ... })
      *                        - An object method ([$object, 'methodName'])
      *                        - A static class method ('MyClass::myMethod')
      *                        - A global function ('myFunction')
+     *                        - An object implementing __invoke()
      * @param string $priority The order priority in the events stack ('after' or 'before'). Default to 'after'.
      *
      * @return void
      */
     public static function when(string $eventName, callable $callback, string $priority = 'after'): void
     {
-        if (! isset(static::$events2[$eventName])) {
-            static::$events2[$eventName] = [];
+        if (! isset(static::$when[$eventName])) {
+            static::$when[$eventName] = [];
         }
 
         if ($priority == 'before') {
-            array_unshift(static::$events2[$eventName], $callback);
+            array_unshift(static::$when[$eventName], $callback);
         } else {
-            static::$events2[$eventName][] = $callback;
+            static::$when[$eventName][] = $callback;
         }
     }
 
     /**
      * Trigger an event.
      *
-     * Event handlers corresponding to this event will be called in the order they are registered.
+     * Event listeners will be called in the order they are registered.
      *
      * @param string $eventName The event name to trigger.
-     * @param array<int, mixed> $args The event handlers arguments.
+     * @param array<int, mixed> $args The event arguments.
      * @return mixed[]
      */
     public function trigger(string $eventName, array $args = [])
     {
         $return = [];
 
-        if (isset($this->events[$eventName])) {
-            foreach ($this->events[$eventName] as $callback) {
+        if (isset($this->on[$eventName])) {
+            foreach ($this->on[$eventName] as $callback) {
                 $return[] = call_user_func_array($callback, $args);
             }
         }
 
-        if (isset(static::$events2[$eventName])) {
-            foreach (static::$events2[$eventName] as $callback) {
+        if (isset(static::$when[$eventName])) {
+            foreach (static::$when[$eventName] as $callback) {
                 $return[] = call_user_func_array($callback, $args);
             }
         }
@@ -173,6 +176,7 @@ abstract class Component
      *                        - An object method ([$object, 'methodName'])
      *                        - A static class method ('MyClass::myMethod')
      *                        - A global function ('myFunction')
+     *                        - An object implementing __invoke()
      * @return void
      */
     public function attachBehavior(string $name, callable $callback): void

@@ -57,6 +57,4 @@ class PikoTest extends TestCase
         $this->assertEquals('red', $mock->color);
         $this->assertArrayHasKey('height', $mock->data);
     }
-
-
 }

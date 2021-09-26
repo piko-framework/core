@@ -149,6 +149,9 @@ class Piko
         }
     }
 
+    /**
+     * Reset aliases and registry
+     */
     public static function reset(): void
     {
         static::$aliases = [];
