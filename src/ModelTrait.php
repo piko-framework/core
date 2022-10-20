@@ -100,10 +100,12 @@ trait ModelTrait
 
     /**
      * Validate this model (Should be extended).
-     * Inherited method showld fill the errors array if the model is not valid.
+     * Inherited method should fill the errors array using the setError method if the model is not valid.
      *
      * @see ModelTrait::setError()
      * @see ModelTrait::isValid()
+     *
+     * @codeCoverageIgnore
      *
      * @return void
      */
