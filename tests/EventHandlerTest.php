@@ -50,4 +50,12 @@ class EventHandlerTest extends TestCase
 
         $this->assertEquals('Cool !', $event->value);
     }
+
+    public function testTriggerWithNoRegisteredListeners()
+    {
+        $eventHandler = $this->createEventHandler();
+        $event = new TestEvent();
+        $eventHandler->trigger($event);
+        $this->assertEquals('', $event->value);
+    }
 }
