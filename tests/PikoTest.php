@@ -1,6 +1,6 @@
 <?php
 use PHPUnit\Framework\TestCase;
-use piko\Piko;
+use Piko\Piko;
 
 class PikoTest extends TestCase
 {

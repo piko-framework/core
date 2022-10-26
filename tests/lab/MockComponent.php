@@ -1,7 +1,7 @@
 <?php
 namespace tests\lab;
 
-class MockComponent extends \piko\Component
+class MockComponent extends \Piko\Component
 {
     public $color;
     public $data;

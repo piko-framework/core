@@ -3,7 +3,7 @@ namespace tests\lab;
 
 class TestModel
 {
-    use \piko\ModelTrait;
+    use \Piko\ModelTrait;
 
     public $firstName = '';
     public $lastName = '';
