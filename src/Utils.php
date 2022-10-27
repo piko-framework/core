@@ -26,7 +26,7 @@ class Utils
      * Configure public properties of an object.
      *
      * @param object $object The object instance.
-     * @param array<string, mixed> data A key-value array corresponding to the public properties of an object.
+     * @param array<string, mixed> $data A key-value array corresponding to the public properties of an object.
      * @return void
      */
     public static function configureObject($object, array $data = []): void
