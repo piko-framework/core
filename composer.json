@@ -20,9 +20,12 @@
     "piko/event-dispatcher": "^1.0"
   },
   "autoload" : {
-      "psr-4" : {
+    "psr-4" : {
       "Piko\\" : "src"
-    }
+    },
+    "files" : [
+      "src/Piko.php"
+    ]
   },
   "require-dev" : {
     "phpunit/phpunit" : "^9.5",

@@ -15,6 +15,11 @@
 		<exclude name="Squiz.WhiteSpace.ControlStructureSpacing.SpacingBeforeClose" />
 	</rule>
 
+	<rule ref="PSR1.Classes.ClassDeclaration.MissingNamespace">
+		<!-- Piko class is outside a namespace -->
+		<exclude-pattern>Piko.php</exclude-pattern>
+	</rule>
+
 	<!--Space after cast ((int) $var). -->
 	<rule ref="Generic.Formatting.SpaceAfterCast" />
 
