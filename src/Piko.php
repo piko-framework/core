@@ -67,6 +67,41 @@ class Piko
     }
 
     /**
+     * Generic factory method.
+     *
+     * @param string|array<string, mixed> $type The object type.
+     * If it is a string, it should be the fully qualified name of the class.
+     * If an array given, it must contain the key 'class' with the value corresponding
+     * to the fully qualified name of the class. It should also contain the key 'construct' to give an array of
+     * constuctor arguments
+     * @param array<string, mixed> $properties A key-value paired array corresponding to the object public properties.
+     * @return object
+     */
+    public static function createObject($type, array $properties = []): object
+    {
+        if (is_array($type)) {
+            $properties = $type;
+            $type = $properties['class'];
+            unset($properties['class']);
+        }
+
+        $reflection = new ReflectionClass($type);
+
+        if (isset($properties['construct'])) {
+            $constructArgs = $properties['construct'];
+            unset($properties['construct']);
+        }
+
+        $object = isset($constructArgs) ? $reflection->newInstanceArgs($constructArgs) : $reflection->newInstance();
+
+        if (count($properties)) {
+            static::configureObject($object, $properties);
+        }
+
+        return $object;
+    }
+
+    /**
      * Configure public properties of an object.
      *
      * @param object $object The object instance.

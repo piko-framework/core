@@ -3,6 +3,7 @@ namespace tests;
 
 use PHPUnit\Framework\TestCase;
 use Piko;
+use tests\lab\TestModel;
 
 class PikoTest extends TestCase
 {
@@ -63,5 +64,35 @@ class PikoTest extends TestCase
         $this->assertEquals('hello 1', $object->data1);
         $this->assertNull($object->getData2());
         $this->assertNull($object->getData3());
+    }
+
+    public function testCreateObjectWithDefinitionString()
+    {
+        $object = Piko::createObject(\DateTime::class);
+        $this->assertInstanceOf(\DateTime::class, $object);
+    }
+
+    public function testCreateObjectWithDefinitionStringAndProperties()
+    {
+        $object = Piko::createObject(TestModel::class, ['firstName' => 'John']);
+        $this->assertInstanceOf(TestModel::class, $object);
+        $this->assertEquals('John', $object->firstName);
+    }
+
+    public function testCreateObjectWithDefinitionArray()
+    {
+        $object = Piko::createObject([
+            'class' => \DateTime::class,
+            'construct' => ['2019-03-01']
+        ]);
+
+        $this->assertInstanceOf(\DateTime::class, $object);
+        $this->assertEquals('2019', $object->format('Y'));
+    }
+
+    public function testCreateObjectWithWrongDefinitionString()
+    {
+        $this->expectException(\ReflectionException::class);
+        Piko::createObject('UnknownClass');
     }
 }
