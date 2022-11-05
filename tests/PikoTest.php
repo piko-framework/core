@@ -3,7 +3,7 @@ namespace tests;
 
 use PHPUnit\Framework\TestCase;
 use Piko;
-use tests\lab\TestModel;
+use Piko\Tests\lab\TestModel;
 
 class PikoTest extends TestCase
 {

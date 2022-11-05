@@ -1,5 +1,5 @@
 <?php
-namespace tests\lab;
+namespace Piko\Tests\lab;
 
 class TestModel
 {

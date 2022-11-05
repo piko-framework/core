@@ -1,7 +1,7 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
-use tests\lab\TestModel;
+use Piko\Tests\lab\TestModel;
 
 class ModelTest extends TestCase
 {
