@@ -1,8 +1,5 @@
 <?php
-namespace tests;
-
 use PHPUnit\Framework\TestCase;
-use Piko;
 use Piko\Tests\lab\TestModel;
 
 class PikoTest extends TestCase
@@ -68,8 +65,8 @@ class PikoTest extends TestCase
 
     public function testCreateObjectWithDefinitionString()
     {
-        $object = Piko::createObject(\DateTime::class);
-        $this->assertInstanceOf(\DateTime::class, $object);
+        $object = Piko::createObject(DateTime::class);
+        $this->assertInstanceOf(DateTime::class, $object);
     }
 
     public function testCreateObjectWithDefinitionStringAndProperties()
@@ -82,17 +79,32 @@ class PikoTest extends TestCase
     public function testCreateObjectWithDefinitionArray()
     {
         $object = Piko::createObject([
-            'class' => \DateTime::class,
+            'class' => DateTime::class,
             'construct' => ['2019-03-01']
         ]);
 
-        $this->assertInstanceOf(\DateTime::class, $object);
+        $this->assertInstanceOf(DateTime::class, $object);
         $this->assertEquals('2019', $object->format('Y'));
     }
 
-    public function testCreateObjectWithWrongDefinitionString()
+    public function testCreateObjectWithoutClass()
     {
-        $this->expectException(\ReflectionException::class);
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Missing "class" key in the class definition array.');
+        Piko::createObject([]);
+    }
+
+    public function testCreateObjectWithWrongClassType()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Type must be string.');
+        Piko::createObject(['class' => new DateTime()]);
+    }
+
+    public function testCreateObjectWithUnknownType()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Class UnknownClass not found');
         Piko::createObject('UnknownClass');
     }
 }

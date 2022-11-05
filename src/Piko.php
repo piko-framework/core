@@ -69,7 +69,7 @@ class Piko
     /**
      * Generic factory method.
      *
-     * @param string|array<string, mixed> $type The object type.
+     * @param class-string|array<string, mixed> $type The object type.
      * If it is a string, it should be the fully qualified name of the class.
      * If an array given, it must contain the key 'class' with the value corresponding
      * to the fully qualified name of the class. It should also contain the key 'construct' to give an array of
@@ -81,8 +81,19 @@ class Piko
     {
         if (is_array($type)) {
             $properties = $type;
+
+            if (!isset($properties['class'])) {
+                throw new InvalidArgumentException('Missing "class" key in the class definition array.');
+            }
+
             $type = $properties['class'];
             unset($properties['class']);
+        }
+
+        if (!is_string($type)) {
+            throw new InvalidArgumentException('Type must be string.');
+        } elseif (!class_exists($type)) {
+            throw new InvalidArgumentException(sprintf('Class %s not found', $type));
         }
 
         $reflection = new ReflectionClass($type);
@@ -92,7 +103,8 @@ class Piko
             unset($properties['construct']);
         }
 
-        $object = isset($constructArgs) ? $reflection->newInstanceArgs($constructArgs) : $reflection->newInstance();
+        $object = isset($constructArgs) && is_array($constructArgs) ?
+        $reflection->newInstanceArgs($constructArgs) : $reflection->newInstance();
 
         if (count($properties)) {
             static::configureObject($object, $properties);
