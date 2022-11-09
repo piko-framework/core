@@ -26,7 +26,7 @@ trait BehaviorTrait
      *
      * @var array<callable>
      */
-    private $behaviors = [];
+    public $behaviors = [];
 
     /**
      * Magic method to call a behavior.

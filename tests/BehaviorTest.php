@@ -24,4 +24,21 @@ class BehaviorTest extends TestCase
 
         $object->sum(10, 2);
     }
+
+    public function testAttachBehaviorUsingConfigureObject()
+    {
+        $object = new class {
+            use BehaviorTrait;
+        };
+
+        Piko::configureObject($object, [
+            'behaviors' => [
+                'sum' => function ($a, $b) {
+                    return $a + $b;
+                }
+            ]
+        ]);
+
+        $this->assertEquals(12, $object->sum(10, 2));
+    }
 }
