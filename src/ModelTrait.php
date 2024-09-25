@@ -59,7 +59,7 @@ trait ModelTrait
         $attributes = $this->getAttributes();
 
         foreach ($data as $key => $value) {
-            if (isset($attributes[$key])) {
+            if (array_key_exists($key, $attributes)) {
                 $this->$key = $value;
             }
         }
