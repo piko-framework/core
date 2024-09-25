@@ -3,7 +3,7 @@
 /**
  * This file is part of Piko - Web micro framework
  *
- * @copyright 2019-2022 Sylvain PHILIP
+ * @copyright 2019-2024 Sylvain PHILIP
  * @license LGPL-3.0; see LICENSE.txt
  * @link https://github.com/piko-framework/core
  */
@@ -120,16 +120,15 @@ class Piko
      * @param array<string, mixed> $data A key-value array corresponding to the public properties of an object.
      * @return void
      */
-    public static function configureObject($object, array $data = []): void
+    public static function configureObject(object $object, array $data = []): void
     {
-        $class = get_class($object);
-        $reflection = new ReflectionClass($class);
+        $reflection = new ReflectionClass($object);
         $properties = $reflection->getProperties(ReflectionProperty::IS_PUBLIC);
 
         foreach ($properties as $property) {
             /* @var $property \ReflectionProperty */
             if (isset($data[$property->name])) {
-                $object->{$property->name} = $data[$property->name];
+                $property->setValue($object, $data[$property->name]);
             }
         }
     }

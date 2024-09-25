@@ -3,7 +3,7 @@
 /**
  * This file is part of Piko - Web micro framework
  *
- * @copyright 2022 Sylvain Philip
+ * @copyright 2024 Sylvain Philip
  * @license LGPL-3.0; see LICENSE.txt
  * @link https://github.com/piko-framework/core
  */
@@ -25,14 +25,21 @@ trait EventHandlerTrait
     /**
      * @var EventDispatcherInterface
      */
-    protected $eventDispatcher;
+    protected ?EventDispatcherInterface $eventDispatcher = null;
 
     /**
      * @var ListenerProvider
      */
-    protected $listenerProvider;
+    protected ?ListenerProvider $listenerProvider = null;
 
-    public function on($eventClassName, callable $callback, ?int $priority = null)
+    /**
+     * Registers an event listener.
+     *
+     * @param string $eventClassName The class name of the event to listen for.
+     * @param callable $callback The callback to execute when the event is dispatched.
+     * @param int|null $priority Optional priority for the listener (higher means earlier execution).
+     */
+    public function on(string $eventClassName, callable $callback, ?int $priority = null)
     {
         if ($this->eventDispatcher === null) {
             $this->listenerProvider = new ListenerProvider();
