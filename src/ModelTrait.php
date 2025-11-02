@@ -60,7 +60,17 @@ trait ModelTrait
 
         foreach ($data as $key => $value) {
             if (array_key_exists($key, $attributes)) {
-                $this->$key = $value;
+                if (is_int($this->$key)) {
+                    $this->$key = (int) $value;
+                } elseif (is_string($this->$key)) {
+                    $this->$key = (string) $value;
+                } elseif (is_bool($this->$key)) {
+                    $this->$key = (bool) $value;
+                } elseif (is_float($this->$key)) {
+                    $this->$key = (float) $value;
+                } else {
+                    $this->$key = $value;
+                }
             }
         }
     }
