@@ -69,6 +69,8 @@ trait ModelTrait
                 if ($property->isPublic() && $property->class === $reflection->getName()) {
                     $this->{$key} = $this->castValueForProperty($property, $value);
                 }
+            } elseif (isset($this->{$key})) { // in case of __isset magick method
+                $this->{$key} = $value;
             }
         }
     }
