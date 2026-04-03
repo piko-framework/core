@@ -12,6 +12,9 @@ declare(strict_types=1);
 
 namespace Piko;
 
+use ReflectionClass;
+use ReflectionProperty;
+
 /**
  * Base model trait.
  *
@@ -34,14 +37,14 @@ trait ModelTrait
     protected function getAttributes(): array
     {
         $class = get_called_class();
-        $reflection = new \ReflectionClass($class);
+        $reflection = new ReflectionClass($class);
         $properties = $reflection->getProperties(\ReflectionProperty::IS_PUBLIC);
         $attributes = [];
 
         foreach ($properties as $property) {
             /* @var $property \ReflectionProperty */
             if ($property->class === $class) {
-                $attributes[$property->name] = $property->getValue($this);
+                $attributes[$property->name] = $this->{$property->name} ?? null;
             }
         }
 
@@ -49,30 +52,82 @@ trait ModelTrait
     }
 
     /**
-     * Bind the data to the model attribubes.
+     * Bind the data to the model attributes.
      *
      * @param array<mixed> $data An array of data (name-value pairs).
      * @return void
      */
     public function bind(array $data): void
     {
-        $attributes = $this->getAttributes();
+        $reflection = new ReflectionClass($this);
 
         foreach ($data as $key => $value) {
-            if (array_key_exists($key, $attributes)) {
-                if (is_int($this->$key)) {
-                    $this->$key = (int) $value;
-                } elseif (is_string($this->$key)) {
-                    $this->$key = (string) $value;
-                } elseif (is_bool($this->$key)) {
-                    $this->$key = (bool) $value;
-                } elseif (is_float($this->$key)) {
-                    $this->$key = (float) $value;
-                } else {
-                    $this->$key = $value;
+
+            if ($reflection->hasProperty($key)) {
+                $property = $reflection->getProperty($key);
+
+                if ($property->isPublic() && $property->class === $reflection->getName()) {
+                    $this->{$key} = $this->castValueForProperty($property, $value);
                 }
             }
         }
+    }
+
+    /**
+     * Cast a bound value according to the declared property type.
+     *
+     * @param ReflectionProperty $property
+     * @param mixed $value
+     *
+     * @return mixed
+     */
+    private function castValueForProperty(ReflectionProperty $property, $value)
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        $type = $property->getType();
+
+        if ($type === null) {
+            return $value;
+        }
+
+        $typeName = $type->getName();
+
+        if ($type->allowsNull() && $value === '' && $typeName !== 'string') {
+            return null;
+        }
+
+        return match ($typeName) {
+            'int' => (int) $value,
+            'float' => (float) $value,
+            'bool' => $this->castBooleanValue($value),
+            'string' =>  (string) $value,
+            default => $value
+        };
+    }
+
+    /**
+     * Cast a value to a boolean using common form representations.
+     *
+     * @param mixed $value
+     *
+     * @return bool
+     */
+    private function castBooleanValue($value): bool
+    {
+        if (is_bool($value)) {
+            return $value;
+        }
+
+        $filtered = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+
+        if ($filtered !== null) {
+            return $filtered;
+        }
+
+        return (bool) $value;
     }
 
     /**
