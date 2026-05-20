@@ -95,6 +95,12 @@ trait ModelTrait
             return $value;
         }
 
+        // Union/intersection types do not expose getName().
+        // In that case, keep the original value and let PHP enforce the declared type.
+        if (!method_exists($type, 'getName')) {
+            return $value;
+        }
+
         $typeName = $type->getName();
 
         if ($type->allowsNull() && $value === '' && $typeName !== 'string') {

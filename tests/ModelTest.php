@@ -121,4 +121,18 @@ class ModelTest extends TestCase
         $this->assertSame(['php', 'piko'], $model->tags);
         $this->assertSame(['php', 'piko'], $model->toArray()['tags']);
     }
+
+    public function testModelBindSupportsUnionTypedProperties(): void
+    {
+        $model = new class () {
+            use ModelTrait;
+
+            public int|string $id = 0;
+        };
+
+        $model->bind(['id' => '123']);
+
+        $this->assertSame('123', $model->id);
+        $this->assertSame('123', $model->toArray()['id']);
+    }
 }
